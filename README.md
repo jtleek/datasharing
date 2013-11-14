@@ -39,7 +39,7 @@ It is critical that you include the rawest form of the data that you have access
 raw form of data:
 
 * The strange binary file your measurement machine spits out
-* The unformated Excel file with 10 workbooks the company you contracted with sent you
+* The unformated Excel file with 10 worksheets the company you contracted with sent you
 * The complicated JSON data you got from scraping the Twitter API
 * The hand-entered numbers you collected looking through a microscope
 
@@ -81,7 +81,7 @@ table/spreadsheet that had 21 rows (a row for gene names, and one row for each p
 ids and one row for each data type). 
 
 If you are sharing your data with the collaborator in Excel the tidy data should be in one Excel file per table. They
-should not have multiple workbooks, no macros should be applied to the data, and no columns/cells should be highlighted. 
+should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
 
 
 ### The code book
