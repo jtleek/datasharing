@@ -157,7 +157,7 @@ to confirm that they can obtain the same output file you did.
 
 
 
-What you should expect from a statistician
+What you should expect from the analyst
 ====================
 
 When you turn over a properly tidied data set it dramatically decreases the workload on the statistician. So hopefully
