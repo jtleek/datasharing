@@ -80,6 +80,9 @@ is summarized at the level of the number of counts per exon. Suppose you have 10
 table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
 ids and one row for each data type). 
 
+If you are sharing your data with the collaborator in Excel the tidy data should be in one Excel file per table. They
+should not have multiple workbooks, no macros should be applied to the data, and no columns/cells should be highlighted. 
+
 
 ### The code book
 
@@ -150,6 +153,7 @@ is something called psuedocode. It should look something like:
 You should also include information about which system (Mac/Windows/Linux) you used the software on and whether you 
 tried it more than once to confirm it gave the same results. Ideally, you will run this by a fellow student/labmate
 to confirm that they can obtain the same output file you did. 
+
 
 
 
