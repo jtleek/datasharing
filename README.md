@@ -162,6 +162,7 @@ steps you performed, and try to confirm that they can obtain the same tidy data 
 checks.
 
 You should then expect from the statistician:
+
 1. An analysis script that performs each of the analyses (not just instructions)
 2. The exact computer code they used to run the analysis
 3. All output files/figures they generated. 
