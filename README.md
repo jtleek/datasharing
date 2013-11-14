@@ -63,13 +63,78 @@ may or may not know how to use. Regardless the three general principles you shou
 1. Each variable you measure should be in one column
 2. Each different observation of that variable should be in a different row
 3. There should be one table for each "kind" of variable
-4. If you have multiple tables, they should include a row in the table that allows them to be linked
+4. If you have multiple tables, they should include a column in the table that allows them to be linked
+
+While these are the hard and fast rules, there are a number of other things that will make your data set much easier
+to handle. First is to include a row at the top of each data table/spreadsheet that contains full row names. 
+So if you measured age at diagnosis for patients, you would head that column with the name AgeAtDiagnosis instead
+of something like ADx or another abreviation that may be hard for another person to understand. 
+
+
+Here is an example of how this would work from genomics. Suppose that for 20 people you have collected gene expression measurements with 
+[RNA-sequencing](http://en.wikipedia.org/wiki/RNA-Seq). You have also collected demographic and clinical information
+about the patients including their age, treatment, and diagnosis. You would have one table/spreadsheet that contains the clinical/demographic
+information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
+for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
+is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
+table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
+ids and one row for each data type). 
 
 
 ### The code book
 
+For almost any data set, the measurements you calculate will need to be described in more detail than you will sneak
+into the spreadsheet. The code book contains this information. At minimum it should contain:
+
+1. Information about the variables (including units!) in the data set not contained in the tidy data 
+2. Information about the summary choices you made
+3. Information about the experimental study design you used
+
+In our genomics example, the analyst would want to know what the unit of measurement for each
+clinical/demographic variable is (age in years, treatment by name/dose, level of diagnosis and how heterogeneous). They 
+would also want to know how you picked the exons you used for summarizing the genomic data (UCSC/Ensembl, etc.). They
+would also want to know any other information about how you did the data collection/study design. For example,
+are these the first 20 patients that walked into the clinic? Are they 20 highly selected patients by some characteristic
+like age? Are they randomized to treatments? 
+
+A common format for this document is a word file. There should be a section called "Study design" that has a thorugh
+description of how you collected the data. There is a section called "Code book" that describes each variable and its
+units. 
+
+### How to code variables
+
+When you put variables into a spreadsheet there are several main categories you will run into:
+
+1. Continuous
+2. Ordinal
+3. Categorical
+4. Misssing 
+5. Censored
+
+Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
+would be something like weight measured in kg. Ordinal data are data that have a fixed, small (< 100) number of levels but are ordered. 
+This could be for example survey responses where the choices are: poor, fair, good. Categorical data are data where there
+are multiple categories, but they aren't ordered. One example would be sex: male or female. Missing data are data
+that are missing and you don't know the mechanism. You should code missing values as NA. Censored data are data
+where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
+ora patient being lost to follow-up. They should also be coded as NA when you don't have the data. But you should
+also add a new column to your tidy data called, "VariableNameCensored" which should have values of TRUE if censored 
+and FALSE if not. In the code book you should explain why those values are missing. It is absolutely critical to report
+to the analyst if there is a reason you know about that some of the data are missing. You should also not impute/make up/
+throw away missing observations.
+
+In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
+data, it should be "male" or "female". The ordinal values in the data set should be "poor", "fair", and "good" not 1, 2 ,3.
+This will avoid potential mixups about which direction effects go and will help identify coding errors. 
+
 
 ### The instruction list/script
+
+You may have heard this before, but [reproducibility is kind of a big deal in computational science](http://www.sciencemag.org/content/334/6060/1226).
+That means, when you submit your paper, the reviewers and the rest of the world should be able to exactly replicate
+the analyses from raw data all the way to final results. If you are trying to be efficient, you will likely perform
+some summarization/data analysis steps before the data can be considered tidy. 
+
 
 
 
