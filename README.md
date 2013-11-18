@@ -23,12 +23,26 @@ have to work through all the pre-processing steps first.
 What you should deliver to the statistician
 ====================
 
-For maximum speed in the analysis this is the information you should pass to a statistician:
+For maximum speed in the analysis this is the information you should pass to a
+statistician the following **data package**:
 
 1. The raw data.
 2. A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf) 
 3. A code book describing each variable and its values in the tidy data set.  
 4. An explicit and exact recipe you used to go from 1 -> 2,3 
+
+For maximum depth of the analysis, you might also want to share:
+
+1. How the data were collected. If these are clinical data, for example, were
+   they recruited voluntarily, were they part of a cohort, do they represent
+   some special category? If they are the result of some experiment, how many
+   of these were performed? Were all results shared? If not, why?
+2. Background: papers, manuscripts, theses, grant proposals and so on (keep in
+   mind that sharing too much might have a negative impact on speed).
+3. A description of what is expected from the analysis. Whether you expect a
+   mere computation or some special insights depends on many factors (see also
+   the [blog post](http://simplystatistics.org/2013/11/15/whats-the-future-of-inference/)),
+   but avoid generic "do you have a good idea about that" type of questions.
 
 Let's look at each part of the data package you will transfer. 
 
@@ -182,6 +196,4 @@ Contributors
 ====================
 
 [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
-
-
-
+Osvaldo Zagordi - Added other optional things to share
