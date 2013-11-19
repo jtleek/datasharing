@@ -131,6 +131,7 @@ In general, try to avoid coding categorical or ordinal variables as numbers. Whe
 data, it should be "male" or "female". The ordinal values in the data set should be "poor", "fair", and "good" not 1, 2 ,3.
 This will avoid potential mixups about which direction effects go and will help identify coding errors. 
 
+Always encode every piece of information about your observations using text. For example, if you are storing data in Excel and use a form of colored text or cell background formatting to indicate information about an observation ("red variable entries were observed in experiment 1.") then this information will not be exported (and will be lost!) when the data is exported as raw text.  Every piece of data should be encoded as actual text that can be exported.  
 
 ### The instruction list/script
 
@@ -184,5 +185,6 @@ Contributors
 
 * [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
 * [L. Collado-Torres](http://bit.ly/LColladoTorres) - Fixed typos, added links.
+* [Nick Reich](http://people.umass.edu/nick/) - Added tips on storing data as text.
 
 
