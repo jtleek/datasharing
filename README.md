@@ -101,7 +101,7 @@ would also want to know any other information about how you did the data collect
 are these the first 20 patients that walked into the clinic? Are they 20 highly selected patients by some characteristic
 like age? Are they randomized to treatments? 
 
-A common format for this document is a Word file. There should be a section called "Study design" that has a through
+A common format for this document is a Word file. There should be a section called "Study design" that has a thorough
 description of how you collected the data. There is a section called "Code book" that describes each variable and its
 units. 
 
