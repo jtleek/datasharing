@@ -58,7 +58,7 @@ forensic study of your data to figure out why the raw data looks weird.
 
 The general principles of tidy data are laid out by [Hadley Wickham](http://had.co.nz/) in [this paper](http://vita.had.co.nz/papers/tidy-data.pdf)
 and [this video](http://vimeo.com/33727555). The paper and the video are both focused on the [R](http://www.r-project.org/) package, which you
-may or may not know how to use. Regardless the three general principles you should pay attention to are:
+may or may not know how to use. Regardless the four general principles you should pay attention to are:
 
 1. Each variable you measure should be in one column
 1. Each different observation of that variable should be in a different row
