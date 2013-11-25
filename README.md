@@ -112,7 +112,7 @@ When you put variables into a spreadsheet there are several main categories you 
 1. Continuous
 1. Ordinal
 1. Categorical
-1. Misssing 
+1. Missing 
 1. Censored
 
 Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
