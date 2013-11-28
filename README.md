@@ -180,6 +180,11 @@ analysis. You may not be able to perform the exact analyses without the statisti
 to explain why the statistician performed each step to a labmate/your principal investigator. 
 
 
+Additional Advice
+====================
+Despite through planning some important details can still be missed. For example, perhaps the software recording your data is not creating the variable used for linking observations across multiple sheets, or, at least, perhaps not in the way you think it should. Often times statisticians can forestall these problems by seeing an example of what your final data will look like. If possible, send the statistician a small preliminary sample of your data and ask them if the analysis requested can be completed with the information provided. Doing this will serve two purposes. First, it can prevent you from spending time collecting large amounts of data which later be deemed useless. As the famous statistician R.A. Fisher once said, "To call in the statistician after the experiment is done may be no more than asking him to perform a post-mortem examination: he may be able to say what the experiment died of." Secondly, it can allow the statistician to begin writing analysis code to analyze your data. Typically, the code written by a statistician will work correctly on just a few observations, allowing for both data collection and analysis code writing to be carried out simultaneously.  
+
+
 Contributors
 ====================
 
