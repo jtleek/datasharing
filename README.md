@@ -77,8 +77,8 @@ about the patients including their age, treatment, and diagnosis. You would have
 information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
 for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
 is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
-table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
-ids and one row for each data type). 
+table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one colun for patient
+ids and one column for each data (gene) type). 
 
 If you are sharing your data with the collaborator in Excel, the tidy data should be in one Excel file per table. They
 should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
@@ -116,15 +116,16 @@ When you put variables into a spreadsheet there are several main categories you 
 1. Censored
 
 Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
-would be something like weight measured in kg. [Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
+would be something like weight measured in kg.
+[Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
 This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
 are multiple categories, but they aren't ordered. One example would be sex: male or female. [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
-that are missing and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_(statistics\)) are data
+that are missing and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_(statistics)) are data
 where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
 or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
 also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
 and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
-to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_(statistics\))/make up/
+to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_(statistics))/make up/
 throw away missing observations.
 
 In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
