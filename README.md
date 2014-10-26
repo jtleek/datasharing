@@ -17,7 +17,7 @@ to see the raw data, understand the steps in the processing pipeline, and be abl
 variability in one's data analysis. On the other hand, for many data types, the processing steps are well documented
 and standardized. So the work of converting the data from raw form to directly analyzable form can be performed 
 before calling on a statistician. This can dramatically speed the turnaround time, since the statistician doesn't
-have to work through all the pre-processing steps first. 
+have to work through all the pre-processing steps first.
 
 
 What you should deliver to the statistician
