@@ -39,7 +39,7 @@ It is critical that you include the rawest form of the data that you have access
 raw form of data:
 
 * The strange [binary file](http://en.wikipedia.org/wiki/Binary_file) your measurement machine spits out
-* The unformatted Excel file with 10 worksheets the company you contracted with sent you
+* The unformatted Excel file with 10 worksheets the company you contracted with have sent you
 * The complicated [JSON](http://en.wikipedia.org/wiki/JSON) data you got from scraping the [Twitter API](https://twitter.com/twitterapi)
 * The hand-entered numbers you collected looking through a microscope
 
