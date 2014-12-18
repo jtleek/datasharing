@@ -58,7 +58,7 @@ forensic study of your data to figure out why the raw data looks weird.
 
 The general principles of tidy data are laid out by [Hadley Wickham](http://had.co.nz/) in [this paper](http://vita.had.co.nz/papers/tidy-data.pdf)
 and [this video](http://vimeo.com/33727555). The paper and the video are both focused on the [R](http://www.r-project.org/) package, which you
-may or may not know how to use. Regardless the four general principles you should pay attention to are:
+may or may not know how to use. Regardless, the four general principles you should pay attention to are:
 
 1. Each variable you measure should be in one column
 1. Each different observation of that variable should be in a different row
@@ -120,7 +120,7 @@ would be something like weight measured in kg. [Ordinal data](http://en.wikipedi
 This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
 are multiple categories, but they aren't ordered. One example would be sex: male or female. [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
 that are missing and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_(statistics\)) are data
-where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
+where you know the missing mechanism on some level. Common examples are a measurement being below a detection limit
 or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
 also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
 and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
