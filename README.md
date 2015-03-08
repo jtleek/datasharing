@@ -28,7 +28,7 @@ For maximum speed in the analysis this is the information you should pass to a s
 1. The raw data.
 2. A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf) 
 3. A code book describing each variable and its values in the tidy data set.  
-4. An explicit and exact recipe you used to go from 1 -> 2,3 
+4. An explicit and exact recipe you used to go from 1 -> 2 -> 3 
 
 Let's look at each part of the data package you will transfer. 
 
@@ -186,5 +186,6 @@ Contributors
 * [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
 * [L. Collado-Torres](http://bit.ly/LColladoTorres) - Fixed typos, added links.
 * [Nick Reich](http://people.umass.edu/nick/) - Added tips on storing data as text.
+* [Travis Rose] - Modified raw data suggestion.
 
 
