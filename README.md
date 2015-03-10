@@ -169,6 +169,7 @@ checks.
 
 You should then expect from the statistician:
 
+
 1. An analysis script that performs each of the analyses (not just instructions)
 1. The exact computer code they used to run the analysis
 1. All output files/figures they generated. 
