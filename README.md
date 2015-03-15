@@ -124,7 +124,7 @@ where you know the missingness mechanism on some level. Common examples are a me
 or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
 also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
 and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
-to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_(statistics\))/make up/
+to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_(statistics))/make up/
 throw away missing observations.
 
 In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
