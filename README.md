@@ -77,8 +77,7 @@ about the patients including their age, treatment, and diagnosis. You would have
 information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
 for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
 is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
-table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
-ids and one row for each data type). 
+table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one column for patient ids and one column for each data type). 
 
 If you are sharing your data with the collaborator in Excel, the tidy data should be in one Excel file per table. They
 should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
@@ -144,7 +143,7 @@ The ideal thing for you to do when performing summarization is to create a compu
 that takes the raw data as input and produces the tidy data you are sharing as output. You can try running your script
 a couple of times and see if the code produces the same output. 
 
-In many cases, the person who collected the data has incentive to make it tidy for a statistician to speed the process
+In many cases, the person who collected the data has incentive to make it tidy for a statistician to speedr the process
 of collaboration. They may not know how to code in a scripting language. In that case, what you should provide the statistician
 is something called [pseudocode](http://en.wikipedia.org/wiki/Pseudocode). It should look something like:
 
