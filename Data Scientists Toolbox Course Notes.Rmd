@@ -1,0 +1,66 @@
+## CLI (Command Line Interface)
+
+* `/` = root directory
+* `~` = home directory
+* `pwd` = print working directory (current directory)
+* `clear` = clear screen
+* `ls` = list stuff
+    *  `-a` = see all (hidden)
+    *  `-l` = details
+* `cd` = change directory
+* `mkdir` = make directory
+* `touch` = creates an empty file
+* `cp` = copy
+    * `cp <file> <directory>` = copy a file to a directory
+    * `cp -r <directory> <newDirectory>` = copy all documents from directory to new Directory
+            * `-r` = recursive
+* `rm` = remove
+    * `-r` = remove entire directories (no undo)
+* `mv` = move
+    * `move <file> <directory>` = move file to directory
+    * `move <fileName> <newName>` = rename file
+* `echo` = print arguments you give/variables
+* `date` = print current date 
+
+
+
+## GitHub
+
+* **Workflow** 
+    1. make edits in workspace
+    2. update index/add files
+    3. commit to local repo 
+    4. push to remote repository
+* `git add .` = add all new files to be tracked
+* `git add -u` = updates tracking for files that are renamed or deleted
+* `git add -A` = both of the above
+    * ***Note**: `add` is performed before committing*
+* `git commit -m "message"` = commit the changes you want to be saved to the local copy
+* `git checkout -b branchname` = create new branch
+* `git branch` = tells you what branch you are on
+* `git checkout master` = move back to the master branch
+* `git pull` = merge you changes into other branch/repo (pull request, sent to owner of the repo)
+* `git push` = commit local changes to remote (GitHub)
+
+
+
+## Markdown
+
+* `##` = signifies secondary heading (bold big font)
+* `###` = signifies tertiary heading (slightly smaller font than secondary, not bold)
+* `*` = bullet list item
+
+
+
+## R Packages
+
+* Primary location for R packages --> CRAN
+* `available.packages()` = all packages available
+* `head(rownames(a),3)` = returns first three names of a
+* `install.packages("nameOfPackage")` = install single package
+* `install.packages(c("nameOfPackage", "nameOfPackage", "nameOfPackage")` = install multiple package
+* Bioconductor Packages:
+    *  `source("https://bioconductor.org/biocLite.R")`
+    *  `biocLite()` = install bioconductor packages
+* `library(packagename)` = load package
+* `search()` = see all functions in package after loading
