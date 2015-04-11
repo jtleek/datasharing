@@ -1,11 +1,3 @@
-Vorrei salvare questo documento per rileggerlo con attenzione
-
-
-
-
-
-
-
 How to share data with a statistician
 ===========
 
