@@ -1,4 +1,4 @@
-R assignment w-1
+#R assignment w-1
 
 ## Assignment Week 1
 https://github.com/absolutoslo/practice_assignment/blob/master/practice_assignment.rmd
