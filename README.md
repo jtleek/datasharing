@@ -175,7 +175,8 @@ You should then expect from the statistician:
 
 This is the information you will use in the supplement to establish reproducibility and precision of your results. Each
 of the steps in the analysis should be clearly explained and you should ask questions when you don't understand
-what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical
+what the analyst did. 
+It is the responsibility of both the statistician and the scientist to understand the statistical
 analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
 to explain why the statistician performed each step to a labmate/your principal investigator. 
 
