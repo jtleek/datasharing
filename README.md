@@ -1,4 +1,5 @@
-How to share data with a statistician
+How to share data with Steve Scola
+Were there any other instructions?
 ===========
 
 This is a guide for anyone who needs to share data with a statistician. The target audiences I have in mind are:
