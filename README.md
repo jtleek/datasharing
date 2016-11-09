@@ -106,6 +106,8 @@ A common format for this document is a Word file. There should be a section call
 description of how you collected the data. There is a section called "Code book" that describes each variable and its
 units. 
 
+Please note that a code book is usually more detailed than a [Data Dictionary](http://en.wikipedia.org/wiki/Data_dictionary), although the latter is very useful when the results are spreaded among many tables with different structures (like a [database dump](http://en.wikipedia.org/wiki/Database_dump).
+
 ### How to code variables
 
 When you put variables into a spreadsheet there are several main categories you will run into depending on their [data type](http://en.wikipedia.org/wiki/Statistical_data_type):
