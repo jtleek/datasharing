@@ -180,6 +180,13 @@ what the analyst did. It is the responsibility of both the statistician and the 
 analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
 to explain why the statistician performed each step to a labmate/your principal investigator. 
 
+Personal Lessons Learned:
+Information is one of the most valuable resources companies have available to them.
+It does not decrease in value the more it is shared.
+In fact, it increases in value the more it is used.
+It is not perishable.
+The true value lies in collecting standardized information once, and finding multiple ways to reuse the data!
+:)
 
 Contributors
 ====================
