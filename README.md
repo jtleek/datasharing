@@ -55,7 +55,7 @@ If you made any modifications of the raw data it is not the raw form of the data
 as raw data is a very common way to slow down the analysis process, since the analyst will often have to do a
 forensic study of your data to figure out why the raw data looks weird. (Also imagine what would happen if new data arrived?)
 
-### The tidy data set
+### A tidy data set
 
 The general principles of tidy data are laid out by [Hadley Wickham](http://had.co.nz/) in [this paper](http://vita.had.co.nz/papers/tidy-data.pdf)
 and [this video](http://vimeo.com/33727555). While both the paper and the video describe tidy data using [R](http://www.r-project.org/), the principles
@@ -86,7 +86,7 @@ should not have multiple worksheets, no macros should be applied to the data, an
 Alternatively share the data in a [CSV](http://en.wikipedia.org/wiki/Comma-separated_values) or [TAB-delimited](http://en.wikipedia.org/wiki/Tab-separated_values) text file. (Beware however that reading CSV files into Excel can sometimes lead to non-reproducible handling of date and time variables.)
 
 
-### The code book
+### A code book
 
 For almost any data set, the measurements you calculate will need to be described in more detail than you can or should sneak
 into the spreadsheet. The code book contains this information. At minimum it should contain:
