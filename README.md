@@ -67,7 +67,7 @@ are more generally applicable:
 1. If you have multiple tables, they should include a column in the table that allows them to be joined or merged
 
 While these are the hard and fast rules, there are a number of other things that will make your data set much easier
-to handle. First is to include a row at the top of each data table/spreadsheet that contains full row names. 
+to handle. First is to include a row at the top of each data table/spreadsheet that contains full column names. 
 So if you measured age at diagnosis for patients, you would head that column with the name `AgeAtDiagnosis` instead
 of something like `ADx` or another abbreviation that may be hard for another person to understand. 
 
