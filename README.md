@@ -5,7 +5,7 @@ This is a guide for anyone who needs to share data with a statistician or data s
 
 * Collaborators who need statisticians or data scientists to analyze data for them
 * Students or postdocs in various disciplines looking for consulting advice
-* Junior statistics students whose job it is to collate/clean/wrangle data sets
+* Junior statistics students whose job it is to collate/clean/evaluate data sets
 
 The goals of this guide are to provide some instruction on the best way to share data to avoid the most common pitfalls
 and sources of delay in the transition from data collection to data analysis. The [Leek group](http://biostat.jhsph.edu/~jleek/) works with a large
