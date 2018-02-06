@@ -30,6 +30,19 @@ To facilitate the most efficient and timely analysis this is the information you
 3. A code book describing each variable and its values in the tidy data set.  
 4. An explicit and exact recipe you used to go from 1 -> 2,3 
 
+For maximum depth of the analysis, you might also want to share:
+
+1. How the data were collected. If these are clinical data, for example, were
+   they recruited voluntarily, were they part of a cohort, do they represent
+   some special category? If they are the result of some experiment, how many
+   of these were performed? Were all results shared? If not, why?
+2. Background: papers, manuscripts, theses, grant proposals and so on (keep in
+   mind that sharing too much might have a negative impact on speed).
+3. A description of what is expected from the analysis. Whether you expect a
+   mere computation or some special insights depends on many factors (see also
+   the [blog post](http://simplystatistics.org/2013/11/15/whats-the-future-of-inference/)),
+   but avoid generic "do you have a good idea about that" type of questions.
+
 Let's look at each part of the data package you will transfer. 
 
 
@@ -188,5 +201,3 @@ Contributors
 * [L. Collado-Torres](http://bit.ly/LColladoTorres) - Fixed typos, added links.
 * [Nick Reich](http://people.umass.edu/nick/) - Added tips on storing data as text.
 * [Nick Horton](https://www.amherst.edu/people/facstaff/nhorton) - Minor wording suggestions.
-
-
