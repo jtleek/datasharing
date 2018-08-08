@@ -1,4 +1,4 @@
-How to share data with a statistician
+How to share data with a statistician 
 ===========
 
 This is a guide for anyone who needs to share data with a statistician or data scientist. The target audiences I have in mind are:
@@ -25,7 +25,7 @@ What you should deliver to the statistician
 
 To facilitate the most efficient and timely analysis this is the information you should pass to a statistician:
 
-1. The raw data.
+1. The raw data. 
 2. A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf) 
 3. A code book describing each variable and its values in the tidy data set.  
 4. An explicit and exact recipe you used to go from 1 -> 2,3 
