@@ -9,7 +9,7 @@ This is a guide for anyone who needs to share data with a statistician or data s
 
 The goals of this guide are to provide some instruction on the best way to share data to avoid the most common pitfalls
 and sources of delay in the transition from data collection to data analysis. The [Leek group](http://biostat.jhsph.edu/~jleek/) works with a large
-number of collaborators and the number one source of variation in the speed to results is the status of the data
+number of collaborators and the number one source of variation in the speed of results is the status of the data
 when they arrive at the Leek group. Based on my conversations with other statisticians this is true nearly universally.
 
 My strong feeling is that statisticians should be able to handle the data in whatever state they arrive. It is important
