@@ -21,7 +21,7 @@ have to work through all the pre-processing steps first.
 
 
 What you should deliver to the statistician
-====================
+=====================
 
 To facilitate the most efficient and timely analysis this is the information you should pass to a statistician:
 
@@ -161,7 +161,7 @@ to confirm that they can obtain the same output file you did.
 
 
 What you should expect from the analyst
-====================
+=====================
 
 When you turn over a properly tidied data set it dramatically decreases the workload on the statistician. So hopefully
 they will get back to you much sooner. But most careful statisticians will check your recipe, ask questions about
