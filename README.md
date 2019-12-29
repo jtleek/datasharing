@@ -1,145 +1,192 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 https://www.cnblogs.com/IvyWong/p/10135473.html
-
-> Forking this repo is part of a 'learn to git' assignment for a class on Coursera.[#217](https://github.com/jtleek/datasharing/issues/217#issuecomment-66935401)
-
-如何和统计学家分享数据
+How to share data with a statistician
 ===========
 
-原文地址：[https://github.com/jtleek/datasharing](https://github.com/jtleek/datasharing)
+This is a guide for anyone who needs to share data with a statistician or data scientist. The target audiences I have in mind are:
 
-将原文渣翻译的版本。
+* Collaborators who need statisticians or data scientists to analyze data for them
+* Students or postdocs in various disciplines looking for consulting advice
+* Junior statistics students whose job it is to collate/clean/wrangle data sets
 
-这是一份指南给需要分享数据给统计学家或者数据科学家的任何人。我认为的目标读者是：
+The goals of this guide are to provide some instruction on the best way to share data to avoid the most common pitfalls
+and sources of delay in the transition from data collection to data analysis. The [Leek group](http://biostat.jhsph.edu/~jleek/) works with a large
+number of collaborators and the number one source of variation in the speed to results is the status of the data
+when they arrive at the Leek group. Based on my conversations with other statisticians this is true nearly universally.
 
-*   需要统计学家或数据科学家帮助他们分析数据的合作者
-*   正在寻求咨询建议的各个领域的学生或博士后
-*   任务是收集 / 清洗 / 整理数据集的低年级统计学学生
+My strong feeling is that statisticians should be able to handle the data in whatever state they arrive. It is important
+to see the raw data, understand the steps in the processing pipeline, and be able to incorporate hidden sources of
+variability in one's data analysis. On the other hand, for many data types, the processing steps are well documented
+and standardized. So the work of converting the data from raw form to directly analyzable form can be performed 
+before calling on a statistician. This can dramatically speed the turnaround time, since the statistician doesn't
+have to work through all the pre-processing steps first. 
 
-本指南的目的是就共享数据的最佳方式提供一些指导, 以避免从数据收集到数据分析过程中最常见的陷阱。Leek Group 和很多合作者合作，而决定我们拿到结果的速度的第一要素是数据到 Leek group 时的状态。根据我与其他统计学家的谈话, 这几乎是普遍的。
 
-我认为统计学家应该能够处理拿到的任何形式的数据。重要的是要看到原始数据，了解处理的过程，并且能够综合其他人的数据分析的变化的隐藏信息。另一方面, 对于许多数据类型, 处理步骤都有很好的记录和标准化。因此, 在求助统计学家之前, 可以完成将数据从原始形式转换为可直接分析形式的工作。这可以极大地加快周转时间, 因为统计学家不必先完成所有的预处理步骤。
+What you should deliver to the statistician
+====================
 
-你应该给统计学家发送什么
-----------------------------
+To facilitate the most efficient and timely analysis this is the information you should pass to a statistician:
 
-为了便于进行最有效和最及时的分析, 这是你应该传递给统计学家的信息：
+1. The raw data.
+2. A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf) 
+3. A code book describing each variable and its values in the tidy data set.  
+4. An explicit and exact recipe you used to go from 1 -> 2,3 
 
-1. 原始数据
+Let's look at each part of the data package you will transfer. 
 
-2. 整洁数据集 (A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf))
 
-3. 描述整洁数据集中的每个变量及其值的代码簿
+### The raw data
 
-4. 你用来将 1 处理成 2,3 的明确而准确的工作程序
+It is critical that you include the rawest form of the data that you have access to. This ensures
+that data provenance can be maintained throughout the workflow.  Here are some examples of the
+raw form of data:
 
-### 原始数据
+* The strange [binary file](http://en.wikipedia.org/wiki/Binary_file) your measurement machine spits out
+* The unformatted Excel file with 10 worksheets the company you contracted with sent you
+* The complicated [JSON](http://en.wikipedia.org/wiki/JSON) data you got from scraping the [Twitter API](https://twitter.com/twitterapi)
+* The hand-entered numbers you collected looking through a microscope
 
-关键的是，你应该包含你所能获取的最原始的形式的数据。这可确保在整个工作流中保持数据来源。下面是数据原始形式的一些示例：
+You know the raw data are in the right format if you: 
 
-*   你的测量仪器给的奇怪的二进制文件
-*   与你签约的公司发送给你的，10 个工作表的未格式化 Excel 文件
-*   你爬取 Twitter API 所获得的复杂的 json 数据
-*   你通过显微镜收集到的手工输入的数字
+1. Ran no software on the data
+1. Did not modify any of the data values
+1. You did not remove any data from the data set
+1. You did not summarize the data in any way
 
-如果你做到了下面这几点，那么你就知道原始数据的格式是正确的：
+If you made any modifications of the raw data it is not the raw form of the data. Reporting modified data
+as raw data is a very common way to slow down the analysis process, since the analyst will often have to do a
+forensic study of your data to figure out why the raw data looks weird. (Also imagine what would happen if new data arrived?)
 
-1. 没有对数据运用任何软件处理
+### The tidy data set
 
-2. 没有修改任何数据值
+The general principles of tidy data are laid out by [Hadley Wickham](http://had.co.nz/) in [this paper](http://vita.had.co.nz/papers/tidy-data.pdf)
+and [this video](http://vimeo.com/33727555). While both the paper and the video describe tidy data using [R](http://www.r-project.org/), the principles
+are more generally applicable:
 
-3. 没有从数据集中删除任何数据
+1. Each variable you measure should be in one column
+1. Each different observation of that variable should be in a different row
+1. There should be one table for each "kind" of variable
+1. If you have multiple tables, they should include a column in the table that allows them to be joined or merged
 
-4. 没有用任何方式归纳数据
+While these are the hard and fast rules, there are a number of other things that will make your data set much easier
+to handle. First is to include a row at the top of each data table/spreadsheet that contains full row names. 
+So if you measured age at diagnosis for patients, you would head that column with the name `AgeAtDiagnosis` instead
+of something like `ADx` or another abbreviation that may be hard for another person to understand. 
 
-如果你对原始数据进行了任何修改，那么它就不是数据的原始形式了。将修改后的数据报告为原始数据是让分析过程变慢的一种非常常见的方法, 因为分析师通常必须对你的数据进行像法医一样的研究, 以找出原始数据看起来很奇怪的原因。
 
-### 整洁数据集
+Here is an example of how this would work from genomics. Suppose that for 20 people you have collected gene expression measurements with 
+[RNA-sequencing](http://en.wikipedia.org/wiki/RNA-Seq). You have also collected demographic and clinical information
+about the patients including their age, treatment, and diagnosis. You would have one table/spreadsheet that contains the clinical/demographic
+information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
+for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
+is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
+table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
+ids and one row for each data type). 
 
-[这篇文章](http://vita.had.co.nz/papers/tidy-data.pdf)和[这个视频](https://vimeo.com/33727555)都阐述了 [Hadley Wickham](http://had.co.nz/) 获取整洁数据的一般原则。虽然文章和视频都是使用 R 来描述整洁数据，但是这个原则是普遍适用的：
+If you are sharing your data with the collaborator in Excel, the tidy data should be in one Excel file per table. They
+should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
+Alternatively share the data in a [CSV](http://en.wikipedia.org/wiki/Comma-separated_values) or [TAB-delimited](http://en.wikipedia.org/wiki/Tab-separated_values) text file. (Beware however that reading CSV files into Excel can sometimes lead to non-reproducible handling of date and time variables.)
 
-1. 你测度的每个变量都应该在一列
 
-2. 对于变量的每一个不同的观测都应该在不同的行
+### The code book
 
-3. 每个变量的 "种类" 应该有一个表
+For almost any data set, the measurements you calculate will need to be described in more detail than you can or should sneak
+into the spreadsheet. The code book contains this information. At minimum it should contain:
 
-4. 如果你有多个表, 它们应在表中包含允许它们联接或合并的列
+1. Information about the variables (including units!) in the data set not contained in the tidy data 
+1. Information about the summary choices you made
+1. Information about the experimental study design you used
 
-虽然这些都是硬性规定, 但还有很多其他的事情可以让你的数据集更容易处理。首先是在每个数据表 / 电子表格的顶部包含一行, 其中包含完整的行名称。因此, 如果你在诊断病人时估计年龄, 你会在该专栏中使用名为`AgeAtDiagnosis`, 而不是像`ADx` 或另一个可能让另一个人难以理解的缩写。
+In our genomics example, the analyst would want to know what the unit of measurement for each
+clinical/demographic variable is (age in years, treatment by name/dose, level of diagnosis and how heterogeneous). They 
+would also want to know how you picked the exons you used for summarizing the genomic data (UCSC/Ensembl, etc.). They
+would also want to know any other information about how you did the data collection/study design. For example,
+are these the first 20 patients that walked into the clinic? Are they 20 highly selected patients by some characteristic
+like age? Are they randomized to treatments? 
 
-下面是一个例子, 说明这将如何从基因组学中发挥作用。假设你已经收集了 20 个人的基因表达方式与 RNA 序列。你还收集了有关患者的人口统计和临床信息, 包括他们的年龄、治疗方法和诊断结果。你将有一个表格 / 电子表格, 其中包含临床 / 人口统计信息。它将有四列 (病人身份证、年龄、治疗、诊断) 和 21 行 (一行为变量名, 然后每个病人一行)。你还将有一个用于汇总基因组数据的电子表格。通常, 这种类型的数据汇总在每个外显子的计数数级别。假设你有 100, 000 个外显子, 那么你将有一个表 / 电子表格, 其中包含 21 行 (基因名称为一行, 每个患者为一行) 和 1000000 一列 (患者 id 为一行, 每个数据类型为一行)。
+A common format for this document is a Word file. There should be a section called "Study design" that has a thorough
+description of how you collected the data. There is a section called "Code book" that describes each variable and its
+units. 
 
-如果要与合作者使用 Excel 共享数据, 那么整洁数据的每张表应在一个 Excel 文件中。它们不应具有多个工作表, 不应将宏应用于数据, 也不应突出显示列 / 单元格。或者使用共享 csv 或 tab 分隔的文本文件来分享数据。（但是要注意的是, 将 csv 文件读入 excel 有时会导致日期和时间变量的不可复制的情况。）
+### How to code variables
 
-### 代码簿
+When you put variables into a spreadsheet there are several main categories you will run into depending on their [data type](http://en.wikipedia.org/wiki/Statistical_data_type):
 
-对于几乎所有的数据集, 你计算的方法需要比你可以或应该使用的电子表格更详细地描述。代码簿就包含了这些信息。至少它应该包含：
+1. Continuous
+1. Ordinal
+1. Categorical
+1. Missing 
+1. Censored
 
-1. 整洁数据集中未包含的变量 (包括单位!) 的信息
+Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
+would be something like weight measured in kg. [Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
+This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
+are multiple categories, but they aren't ordered. One example would be sex: male or female. This coding is attractive because it is self-documenting.  [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
+that are unobserved and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_\(statistics\)) are data
+where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
+or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
+also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
+and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
+to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_\(statistics\))/make up/
+throw away missing observations.
 
-2. 你做出的归纳整理决定的信息
+In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
+data, it should be "male" or "female". The ordinal values in the data set should be "poor", "fair", and "good" not 1, 2 ,3.
+This will avoid potential mixups about which direction effects go and will help identify coding errors. 
 
-3. 你使用的实验方案设计的信息
+Always encode every piece of information about your observations using text. For example, if you are storing data in Excel and use a form of colored text or cell background formatting to indicate information about an observation ("red variable entries were observed in experiment 1.") then this information will not be exported (and will be lost!) when the data is exported as raw text.  Every piece of data should be encoded as actual text that can be exported.  
 
-在我们的基因组学示例中, 分析师想知道每个临床 / 人口变量的测量单位是什么 (以年为单位的年龄, 按名称或剂量的治疗方法, 诊断水平，异质性水平)。他们还想知道你是如何挑选用于汇总基因组数据的外显子 (UCSC/Ensembl 等) 的。他们还想了解有关你如何进行数据收集 / 研究设计的任何其他信息。比如, 这些是走进诊所的前 20 名患者吗？他们是 20 个通过一些特征如年龄挑选出来的病人吗？他们是随机治疗的吗？
+### The instruction list/script
 
-此文档的常见格式是 word 文件。应该有一个名为 "研究设计" 的部分, 其中有一个全面的描述, 你是如何收集数据。有一个名为 "代码簿" 的部分, 描述每个变量及其单位。
+You may have heard this before, but [reproducibility is a big deal in computational science](http://www.sciencemag.org/content/334/6060/1226).
+That means, when you submit your paper, the reviewers and the rest of the world should be able to exactly replicate
+the analyses from raw data all the way to final results. If you are trying to be efficient, you will likely perform
+some summarization/data analysis steps before the data can be considered tidy. 
 
-### 如何对变量进行编码
+The ideal thing for you to do when performing summarization is to create a computer script (in `R`, `Python`, or something else) 
+that takes the raw data as input and produces the tidy data you are sharing as output. You can try running your script
+a couple of times and see if the code produces the same output. 
 
-当你将变量放入电子表格时, 根据其数据类型, 你将遇到几个主要类别：
+In many cases, the person who collected the data has incentive to make it tidy for a statistician to speed the process
+of collaboration. They may not know how to code in a scripting language. In that case, what you should provide the statistician
+is something called [pseudocode](http://en.wikipedia.org/wiki/Pseudocode). It should look something like:
 
-1. 连续的
+1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3
+1. Step 2 - run the software separately for each sample
+1. Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set
 
-2. 顺序的
+You should also include information about which system (Mac/Windows/Linux) you used the software on and whether you 
+tried it more than once to confirm it gave the same results. Ideally, you will run this by a fellow student/labmate
+to confirm that they can obtain the same output file you did. 
 
-3. 分类的
 
-4. 缺失的
 
-5. 删改的
 
-连续变量是在数量尺度上测量的任何东西, 可以是任何小数。比如说以公斤为单位的重量。顺序数据是具有固定的、小级别 (<100) 但按顺序排序的数据。例如, 在调查反馈中的选项: 贫穷、正常、良好。分类数据是有多个类别的数据, 但未对其进行排序。比如说性别: 男性或女性。这种编码很有吸引力, 因为它是自我描述的。缺失数据是未观测到的数据, 而且你不知道这个机制。你应该将缺失的值编码为`NA`。删改数据是在某种程度上你知道错误机制的数据。常见的例子是测量值低于检测界限或者病人在随访中跟丢。当你没有这个数据时, 它们也应被编码为`NA`。但你也应该给你的整洁数据集添加一个新的列 "缺失的变量名称", 其中缺失值 True 与未缺失 False。在代码簿中, 您应该解释为什么缺少这些值。如果您知道某些数据丢失是有原因的, 则向分析师报告是绝对重要的。你也不应该模仿 / 扔掉缺失的观测结果。
+What you should expect from the analyst
+====================
 
-通常, 尽量避免将分类变量或序号变量编码为数字。当你在整洁的数据中输入性别的值时, 它应该是 "男性" 或 "女性"。数据集中的序号值应该是 "差"、"公平" 和 "好", 而不是 1、2、3。这将避免有关方向效果的潜在混淆, 并有助于识别编码错误。
+When you turn over a properly tidied data set it dramatically decreases the workload on the statistician. So hopefully
+they will get back to you much sooner. But most careful statisticians will check your recipe, ask questions about
+steps you performed, and try to confirm that they can obtain the same tidy data that you did with, at minimum, spot
+checks.
 
-始终使用文本对有关观察的每一条信息进行编码。例如, 如果你使用 Excel 存储数据，并使用一种彩色文本或单元格背景格式来指示有关观察的信息 ("在实验 1 中观察到的变量用红色表示")。将数据导出为原始文本时，那么这个信息不会被导出 (并且会丢失)。每个数据块都应编码为可以导出的实际文本。
+You should then expect from the statistician:
 
-### 操作指南的列表 / 脚本
+1. An analysis script that performs each of the analyses (not just instructions)
+1. The exact computer code they used to run the analysis
+1. All output files/figures they generated. 
 
-你可能以前听说过这一点, 但重现性在计算科学中是一件大事。这意味着, 当你提交论文时, 审阅者和世界其他国家应该能够准确地复制这项分析从原始数据到最终结果。如果你试图提高效率, 那么你可能在数据被认为是整洁之前，会执行一些汇总 / 数据分析的步骤。
+This is the information you will use in the supplement to establish reproducibility and precision of your results. Each
+of the steps in the analysis should be clearly explained and you should ask questions when you don't understand
+what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical
+analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
+to explain why the statistician performed each step to a labmate/your principal investigator. 
 
-在执行归纳汇总的操作时，你最理想的做法是创建一个计算机脚本（R,Python 或其他的）。这个脚本把原始数据作为输入，并生成共享的整洁数据。你可以尝试运行脚本几次, 看看代码是否生成相同的输出。
 
-在许多情况下，收集数据的人有动力来把更整洁的数据给统计学家，以此来加快合作进程。他们可能不知道如何用脚本语言编写代码。在这种情况下, 你应该提供给统计学家的是所谓的伪代码。它应该看起来像：
+Contributors
+====================
 
-1. 步骤 1 - 使用原始文件，运行版本为 3.1.2 的汇总软件，参数设置为 a=1,b=2,c=3
+* [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
+* [L. Collado-Torres](http://bit.ly/LColladoTorres) - Fixed typos, added links.
+* [Nick Reich](http://people.umass.edu/nick/) - Added tips on storing data as text.
+* [Nick Horton](https://www.amherst.edu/people/facstaff/nhorton) - Minor wording suggestions.
 
-2. 步骤 2 - 分别对每个样本运行这个软件
 
-3. 步骤 3 - 取出每个样本的`outputfile.out`文件的第三列，它是输出数据集中的对应行
-
-你也应该包含你使用运行软件的系统（Mac/Windows/Linux）的信息，以及你是否尝试多次来确保得到相同的结果。理想情况下, 你应让同学 / 实验室伙伴运行此操作, 以确认他们可以获得与你相同的输出文件。
-
-你应该期待从分析者那得到什么
-------------------------------
-
-当你转交一份适当的整洁数据集时，它将极大地减少统计学家的工作量。所以希望他们能早点给你回复。但是，大多数细心的统计学家会检查你的方法，询问你所执行的步骤的问题，并试图确认他们至少可以获得你所做的同样整洁的数据。
-
-然后, 你应该期待从统计学家处获得的东西如下:
-
-1. 执行每次分析的分析文本（不仅仅是说明）
-
-2. 他们用来运行分析的确切的计算机代码
-
-3. 他们生成的所有输出文件 / 图表
-
-这是你将在补充中使用的信息, 以建立你的结果的重现性和准确性。分析中的每个步骤都应该清楚地解释, 当你不明白分析师做了什么的时候, 你应该问问题。统计分析是统计学家和科学家的责任。如果没有统计学家的代码, 你可能无法进行准确的分析, 但你应该能够对你的实验室伙伴 / 投资者解释为什么统计学家执行的每一步。
-
-贡献者
--------------------
-
-*   [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - 书写了最初的版本
-*   [L. Collado-Torres](http://bit.ly/LColladoTorres) - 修改了一些小错误，加上了一些链接
-*   [Nick Reich](http://people.umass.edu/nick/) - 加上了一些在存储数据时的小建议
-*   [Nick Horton](https://www.amherst.edu/people/facstaff/nhorton) - 一些小的措词建议
