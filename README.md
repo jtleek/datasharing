@@ -1,5 +1,7 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 https://www.cnblogs.com/IvyWong/p/10135473.html
 
+> Forking this repo is part of a 'learn to git' assignment for a class on Coursera. [#217](https://github.com/jtleek/datasharing/issues/217#issuecomment-66935401)
+
 如何和统计学家分享数据
 ===========
 
