@@ -1,6 +1,8 @@
 How to share data with a statistician
 ===========
 
+The course so far has proven to be really useful. I'm forking this particular article! I hope to learn a lot by the end!
+
 This is a guide for anyone who needs to share data with a statistician or data scientist. The target audiences I have in mind are:
 
 * Collaborators who need statisticians or data scientists to analyze data for them
