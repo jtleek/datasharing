@@ -1,5 +1,8 @@
 How to share data with a statistician
 ===========
+Tanya 
+Forking it for the assignment
+
 
 The course so far has proven to be really useful. I'm forking this particular article! I hope to learn a lot by the end!
 
