@@ -180,6 +180,7 @@ what the analyst did. It is the responsibility of both the statistician and the 
 analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
 to explain why the statistician performed each step to a labmate/your principal investigator. 
 
+Just for homework
 
 Contributors
 ====================
