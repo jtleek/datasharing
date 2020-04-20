@@ -53,7 +53,7 @@ You know the raw data are in the right format if you:
 
 If you made any modifications of the raw data it is not the raw form of the data. Reporting modified data
 as raw data is a very common way to slow down the analysis process, since the analyst will often have to do a
-forensic study of your data to figure out why the raw data looks weird. (Also imagine what would happen if new data arrived?)
+forensic study of your data to figure out why the raw data looks weird. (Also imagine what would happen if new data arrived!)
 
 ### The tidy data set
 
