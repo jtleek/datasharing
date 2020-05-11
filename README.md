@@ -20,7 +20,7 @@ before calling on a statistician. This can dramatically speed the turnaround tim
 have to work through all the pre-processing steps first. 
 
 
-What you should deliver to the statistician
+What you should deliver to the statistician.
 ====================
 
 To facilitate the most efficient and timely analysis this is the information you should pass to a statistician:
