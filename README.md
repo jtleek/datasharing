@@ -1,13 +1,13 @@
 How to share data with a statistician
 ===========
 
-This is a guide for anyone who needs to share data with a statistician or data scientist. The target audiences I have in mind are:
+This guide provides insights to everyone who wants to share data with a statistician or a data scientist. The target audiences, who will be benefited the most includes:
 
-* Collaborators who need statisticians or data scientists to analyze data for them
-* Students or postdocs in various disciplines looking for consulting advice
-* Junior statistics students whose job it is to collate/clean/wrangle data sets
+* Collaborators who need statisticians or data scientists to analyze data for them.
+* Students or postdocs in various disciplines looking for consulting advice.
+* Junior statistics students whose job it is to collect/clean/wrangle various data sets.
 
-The goals of this guide are to provide some instruction on the best way to share data to avoid the most common pitfalls
+The goals of this guide are to provide some instructions on the best way to share data to avoid the most common pitfalls
 and sources of delay in the transition from data collection to data analysis. The [Leek group](http://biostat.jhsph.edu/~jleek/) works with a large
 number of collaborators and the number one source of variation in the speed to results is the status of the data
 when they arrive at the Leek group. Based on my conversations with other statisticians this is true nearly universally.
@@ -175,10 +175,7 @@ You should then expect from the statistician:
 1. All output files/figures they generated. 
 
 This is the information you will use in the supplement to establish reproducibility and precision of your results. Each
-of the steps in the analysis should be clearly explained and you should ask questions when you don't understand
-what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical
-analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
-to explain why the statistician performed each step to a labmate/your principal investigator. 
+of the steps in the analysis should be clearly explained without any ambiguity and you should ask questions when you don't understand, what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able to explain why the statistician performed each step to a labmate/your principal investigator. 
 
 
 Contributors
