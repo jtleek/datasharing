@@ -168,7 +168,7 @@ they will get back to you much sooner. But most careful statisticians will check
 steps you performed, and try to confirm that they can obtain the same tidy data that you did with, at minimum, spot
 checks.
 
-You should then expect from the statistician:
+You should then expect from the statistician: 
 
 1. An analysis script that performs each of the analyses (not just instructions)
 1. The exact computer code they used to run the analysis
