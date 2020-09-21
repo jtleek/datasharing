@@ -111,20 +111,21 @@ units.
 When you put variables into a spreadsheet there are several main categories you will run into depending on their [data type](http://en.wikipedia.org/wiki/Statistical_data_type):
 
 1. Continuous
-1. Ordinal
+1. Ordinal 
 1. Categorical
 1. Missing 
 1. Censored
+1. Interval or Ratio
 
 Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
 would be something like weight measured in kg. [Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
 This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
 are multiple categories, but they aren't ordered. One example would be sex: male or female. This coding is attractive because it is self-documenting.  [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
 that are unobserved and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_\(statistics\)) are data
-where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
-or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
+where you know the missingness mechanism on some level.  Common examples are a measurement being below a detection limit or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
 also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
-and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
+and `FALSE` if not. [Interval data](https://www.graphpad.com/guides/prism/7/statistics/the_different_kinds_of_variabl.htm)
+In the code book you should explain why those values are missing. It is absolutely critical to report
 to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_\(statistics\))/make up/
 throw away missing observations.
 
