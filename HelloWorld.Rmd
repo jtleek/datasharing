@@ -1,0 +1,9 @@
+---
+title: "R Markdown Test"
+author: "Sam"
+date: "29/08/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+## This is a my markdown file
