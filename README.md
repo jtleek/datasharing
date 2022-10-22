@@ -1,5 +1,4 @@
 How to share data with a statistician
-22 Oct
 ===========
 
 This is a guide for anyone who needs to share data with a statistician or data scientist. The target audiences I have in mind are:
