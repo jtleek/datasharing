@@ -149,9 +149,9 @@ In many cases, the person who collected the data has incentive to make it tidy f
 of collaboration. They may not know how to code in a scripting language. In that case, what you should provide the statistician
 is something called [pseudocode](http://en.wikipedia.org/wiki/Pseudocode). It should look something like:
 
-1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3
-1. Step 2 - run the software separately for each sample
-1. Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set
+1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3.
+1. Step 2 - run the software separately for each sample.
+1. Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set.
 
 You should also include information about which system (Mac/Windows/Linux) you used the software on and whether you 
 tried it more than once to confirm it gave the same results. Ideally, you will run this by a fellow student/labmate
