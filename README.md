@@ -181,7 +181,7 @@ analysis. You may not be able to perform the exact analyses without the statisti
 to explain why the statistician performed each step to a labmate/your principal investigator. 
 
 
-Contributors
+Contributor
 ====================
 
 * [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
