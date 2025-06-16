@@ -1,0 +1,5 @@
+this is new file for r module
+print("Hello world")
+z=10
+y=12
+print x=z+y
