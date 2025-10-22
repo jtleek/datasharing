@@ -1,0 +1,41 @@
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Database
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+alembic==1.13.1
+
+# Async & Task Queue
+celery==5.3.6
+redis==5.0.1
+httpx==0.26.0
+aiohttp==3.9.1
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+bcrypt==4.1.2
+
+# Data Processing
+pandas==2.1.4
+pyarrow==14.0.2
+numpy==1.26.3
+
+# Brazilian Data Sources APIs
+ckanapi==4.7
+requests==2.31.0
+
+# Utilities
+python-dotenv==1.0.0
+pydantic-settings==2.1.0
+
+# Development
+pytest==7.4.4
+pytest-asyncio==0.23.3
+black==23.12.1
+flake8==7.0.0

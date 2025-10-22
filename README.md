@@ -1,190 +1,403 @@
-How to share data with a statistician
-===========
+# 🇧🇷 Brazilian Federal Data Collector SaaS
 
-This is a guide for anyone who needs to share data with a statistician. The target audiences I have in mind are:
+A comprehensive SaaS platform for accessing, managing, and transforming Brazilian public federal datasets, optimized for AI and machine learning applications.
 
-* Scientific collaborators who need statisticians to analyze data for them
-* Students or postdocs in scientific disciplines looking for consulting advice
-* Junior statistics students whose job it is to collate/clean data sets
+> **Note**: The original "How to share data with a statistician" guide has been preserved in [README_ORIGINAL.md](README_ORIGINAL.md)
 
-The goals of this guide are to provide some instruction on the best way to share data to avoid the most common pitfalls
-and sources of delay in the transition from data collection to data analysis. The [Leek group](http://biostat.jhsph.edu/~jleek/) works with a large
-number of collaborators and the number one source of variation in the speed to results is the status of the data
-when they arrive at the Leek group. Based on my conversations with other statisticians this is true nearly universally.
+## Overview
 
-My strong feeling is that statisticians should be able to handle the data in whatever state they arrive. It is important
-to see the raw data, understand the steps in the processing pipeline, and be able to incorporate hidden sources of
-variability in one's data analysis. On the other hand, for many data types, the processing steps are well documented
-and standardized. So the work of converting the data from raw form to directly analyzable form can be performed 
-before calling on a statistician. This can dramatically speed the turnaround time, since the statistician doesn't
-have to work through all the pre-processing steps first. 
+This platform provides unified API access to multiple Brazilian federal data sources, with features designed specifically for AI/ML practitioners and data scientists who need clean, well-formatted datasets for training and analysis.
 
+## Features
 
-What you should deliver to the statistician
-====================
+### 🎯 Core Features
 
-For maximum speed in the analysis this is the information you should pass to a statistician:
+- **Multi-Source Integration**: Access dados.gov.br, Portal da Transparência, IBGE, and more through a single API
+- **AI-Ready Formats**: Download data in JSON, CSV, or Parquet formats
+- **Data Quality Metrics**: Automatic completeness scores and quality assessments
+- **Smart Data Transformation**: Brazilian-specific data normalization (CPF/CNPJ, currency, dates)
+- **API Key Management**: Secure access with personal API keys and rate limiting
+- **Async Processing**: Background data collection with Celery
+- **Search & Discovery**: Full-text search across all datasets
+- **Auto-Sync**: Keep datasets updated from official sources
 
-1. The raw data.
-2. A [tidy data set](http://vita.had.co.nz/papers/tidy-data.pdf) 
-3. A code book describing each variable and its values in the tidy data set.  
-4. An explicit and exact recipe you used to go from 1 -> 2,3 
+### 📊 Supported Data Sources
 
-Let's look at each part of the data package you will transfer. 
+1. **dados.gov.br** - Brazilian Open Data Portal (CKAN-based)
+   - 10,000+ datasets from federal agencies
+   - Multiple formats (CSV, JSON, XML)
 
+2. **Portal da Transparência** - Government Transparency Portal
+   - Public spending data
+   - Government contracts
+   - Public servant salaries
+   - Sanctioned companies
 
-### The raw data
+3. **IBGE** - Brazilian Institute of Geography and Statistics
+   - Geographic data (states, municipalities)
+   - Population statistics
+   - Economic indicators
+   - Census data
 
-It is critical that you include the rawest form of the data that you have access to. Here are some examples of the
-raw form of data:
+## Quick Start
 
-* The strange [binary file](http://en.wikipedia.org/wiki/Binary_file) your measurement machine spits out
-* The unformatted Excel file with 10 worksheets the company you contracted with sent you
-* The complicated [JSON](http://en.wikipedia.org/wiki/JSON) data you got from scraping the [Twitter API](https://twitter.com/twitterapi)
-* The hand-entered numbers you collected looking through a microscope
+### Using Docker (Recommended)
 
-You know the raw data is in the right format if you: 
+```bash
+# Clone the repository
+git clone <repository-url>
+cd datasharing
 
-1. Ran no software on the data
-1. Did not manipulate any of the numbers in the data
-1. You did not remove any data from the data set
-1. You did not summarize the data in any way
+# Copy environment variables
+cp .env.example .env
 
-If you did any manipulation of the data at all it is not the raw form of the data. Reporting manipulated data
-as raw data is a very common way to slow down the analysis process, since the analyst will often have to do a
-forensic study of your data to figure out why the raw data looks weird. 
+# Edit .env and set your SECRET_KEY
+nano .env
 
-### The tidy data set
+# Start all services
+docker-compose up -d
 
-The general principles of tidy data are laid out by [Hadley Wickham](http://had.co.nz/) in [this paper](http://vita.had.co.nz/papers/tidy-data.pdf)
-and [this video](http://vimeo.com/33727555). The paper and the video are both focused on the [R](http://www.r-project.org/) package, which you
-may or may not know how to use. Regardless the four general principles you should pay attention to are:
+# Initialize database
+docker-compose exec api python scripts/init_db.py
 
-1. Each variable you measure should be in one column
-1. Each different observation of that variable should be in a different row
-1. There should be one table for each "kind" of variable
-1. If you have multiple tables, they should include a column in the table that allows them to be linked
+# View logs
+docker-compose logs -f api
+```
 
-While these are the hard and fast rules, there are a number of other things that will make your data set much easier
-to handle. First is to include a row at the top of each data table/spreadsheet that contains full row names. 
-So if you measured age at diagnosis for patients, you would head that column with the name `AgeAtDiagnosis` instead
-of something like `ADx` or another abbreviation that may be hard for another person to understand. 
+The API will be available at `http://localhost:8000`
 
+Interactive documentation: `http://localhost:8000/docs`
 
-Here is an example of how this would work from genomics. Suppose that for 20 people you have collected gene expression measurements with 
-[RNA-sequencing](http://en.wikipedia.org/wiki/RNA-Seq). You have also collected demographic and clinical information
-about the patients including their age, treatment, and diagnosis. You would have one table/spreadsheet that contains the clinical/demographic
-information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
-for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
-is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
-table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
-ids and one row for each data type). 
+### Local Development
 
-If you are sharing your data with the collaborator in Excel, the tidy data should be in one Excel file per table. They
-should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
-Alternatively share the data in a [CSV](http://en.wikipedia.org/wiki/Comma-separated_values) or [TAB-delimited](http://en.wikipedia.org/wiki/Tab-separated_values) text file.
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
+# Install dependencies
+pip install -r requirements.txt
 
-### The code book
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your settings
 
-For almost any data set, the measurements you calculate will need to be described in more detail than you will sneak
-into the spreadsheet. The code book contains this information. At minimum it should contain:
+# Start PostgreSQL and Redis (via Docker or locally)
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres:15-alpine
+docker run -d -p 6379:6379 redis:7-alpine
 
-1. Information about the variables (including units!) in the data set not contained in the tidy data 
-1. Information about the summary choices you made
-1. Information about the experimental study design you used
+# Initialize database
+python scripts/init_db.py
 
-In our genomics example, the analyst would want to know what the unit of measurement for each
-clinical/demographic variable is (age in years, treatment by name/dose, level of diagnosis and how heterogeneous). They 
-would also want to know how you picked the exons you used for summarizing the genomic data (UCSC/Ensembl, etc.). They
-would also want to know any other information about how you did the data collection/study design. For example,
-are these the first 20 patients that walked into the clinic? Are they 20 highly selected patients by some characteristic
-like age? Are they randomized to treatments? 
+# Run the application
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-A common format for this document is a Word file. There should be a section called "Study design" that has a thorough
-description of how you collected the data. There is a section called "Code book" that describes each variable and its
-units. 
+# In another terminal, start Celery worker
+celery -A celery_app worker --loglevel=info
+```
 
-### How to code variables
+## Usage Examples
 
-When you put variables into a spreadsheet there are several main categories you will run into depending on their [data type](http://en.wikipedia.org/wiki/Statistical_data_type):
+### 1. Register and Login
 
-1. Continuous
-1. Ordinal
-1. Categorical
-1. Missing 
-1. Censored
+```bash
+# Register a new user
+curl -X POST "http://localhost:8000/api/v1/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "username": "myuser",
+    "password": "securepassword123",
+    "full_name": "John Doe"
+  }'
 
-Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
-would be something like weight measured in kg. [Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
-This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
-are multiple categories, but they aren't ordered. One example would be sex: male or female. [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
-that are missing and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_(statistics\)) are data
-where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
-or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
-also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
-and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
-to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_(statistics\))/make up/
-throw away missing observations.
+# Login to get access token
+curl -X POST "http://localhost:8000/api/v1/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=myuser&password=securepassword123"
+```
 
-In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
-data, it should be "male" or "female". The ordinal values in the data set should be "poor", "fair", and "good" not 1, 2 ,3.
-This will avoid potential mixups about which direction effects go and will help identify coding errors. 
+### 2. Create API Key
 
-Always encode every piece of information about your observations using text. For example, if you are storing data in Excel and use a form of colored text or cell background formatting to indicate information about an observation ("red variable entries were observed in experiment 1.") then this information will not be exported (and will be lost!) when the data is exported as raw text.  Every piece of data should be encoded as actual text that can be exported.  
+```bash
+# Create an API key (use the access_token from login)
+curl -X POST "http://localhost:8000/api/v1/api-keys/" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My API Key",
+    "expires_in_days": 365
+  }'
+```
 
-### The instruction list/script
+### 3. Sync Datasets (Admin Only)
 
-You may have heard this before, but [reproducibility is kind of a big deal in computational science](http://www.sciencemag.org/content/334/6060/1226).
-That means, when you submit your paper, the reviewers and the rest of the world should be able to exactly replicate
-the analyses from raw data all the way to final results. If you are trying to be efficient, you will likely perform
-some summarization/data analysis steps before the data can be considered tidy. 
+```bash
+# Sync datasets from dados.gov.br
+curl -X POST "http://localhost:8000/api/v1/datasets/sync/dados_gov_br?limit=100" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-The ideal thing for you to do when performing summarization is to create a computer script (in `R`, `Python`, or something else) 
-that takes the raw data as input and produces the tidy data you are sharing as output. You can try running your script
-a couple of times and see if the code produces the same output. 
+### 4. Search Datasets
 
-In many cases, the person who collected the data has incentive to make it tidy for a statistician to speed the process
-of collaboration. They may not know how to code in a scripting language. In that case, what you should provide the statistician
-is something called [pseudocode](http://en.wikipedia.org/wiki/Pseudocode). It should look something like:
+```bash
+# Search for datasets
+curl -X GET "http://localhost:8000/api/v1/datasets/search?query=educação&limit=20" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 
-1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3
-1. Step 2 - run the software separately for each sample
-1. Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set
+# Filter by source
+curl -X GET "http://localhost:8000/api/v1/datasets/search?source=ibge&ai_ready_only=true" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-You should also include information about which system (Mac/Windows/Linux) you used the software on and whether you 
-tried it more than once to confirm it gave the same results. Ideally, you will run this by a fellow student/labmate
-to confirm that they can obtain the same output file you did. 
+### 5. Fetch Dataset Data
 
+```bash
+# Fetch in JSON format
+curl -X POST "http://localhost:8000/api/v1/datasets/fetch/1?format=json" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 
+# Fetch in Parquet format (optimized for AI/ML)
+curl -X POST "http://localhost:8000/api/v1/datasets/fetch/1?format=parquet" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  --output dataset.parquet
+```
 
+### 6. Get Statistics
 
-What you should expect from the analyst
-====================
+```bash
+# Get dataset statistics
+curl -X GET "http://localhost:8000/api/v1/datasets/stats" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-When you turn over a properly tidied data set it dramatically decreases the workload on the statistician. So hopefully
-they will get back to you much sooner. But most careful statisticians will check your recipe, ask questions about
-steps you performed, and try to confirm that they can obtain the same tidy data that you did with, at minimum, spot
-checks.
+## Python Client Example
 
-You should then expect from the statistician:
+```python
+import requests
+import pandas as pd
+from io import BytesIO
 
-1. An analysis script that performs each of the analyses (not just instructions)
-1. The exact computer code they used to run the analysis
-1. All output files/figures they generated. 
+class BrazilDataClient:
+    def __init__(self, api_key: str, base_url: str = "http://localhost:8000"):
+        self.api_key = api_key
+        self.base_url = base_url
+        self.headers = {"Authorization": f"Bearer {api_key}"}
 
-This is the information you will use in the supplement to establish reproducibility and precision of your results. Each
-of the steps in the analysis should be clearly explained and you should ask questions when you don't understand
-what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical
-analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
-to explain why the statistician performed each step to a labmate/your principal investigator. 
+    def search_datasets(self, query: str = None, source: str = None, limit: int = 20):
+        """Search for datasets"""
+        params = {"limit": limit}
+        if query:
+            params["query"] = query
+        if source:
+            params["source"] = source
 
+        response = requests.get(
+            f"{self.base_url}/api/v1/datasets/search",
+            headers=self.headers,
+            params=params
+        )
+        return response.json()
 
-Contributors
-====================
+    def get_dataset_parquet(self, dataset_id: int) -> pd.DataFrame:
+        """Fetch dataset as pandas DataFrame"""
+        response = requests.post(
+            f"{self.base_url}/api/v1/datasets/fetch/{dataset_id}?format=parquet",
+            headers=self.headers
+        )
 
-* [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - Wrote the initial version.
-* [L. Collado-Torres](http://bit.ly/LColladoTorres) - Fixed typos, added links.
-* [Nick Reich](http://people.umass.edu/nick/) - Added tips on storing data as text.
+        if response.status_code == 200:
+            return pd.read_parquet(BytesIO(response.content))
+        else:
+            raise Exception(f"Error: {response.text}")
 
+# Usage
+client = BrazilDataClient(api_key="bfd_your_api_key_here")
 
+# Search for education datasets
+datasets = client.search_datasets(query="educação", limit=10)
+print(f"Found {len(datasets)} datasets")
+
+# Fetch first dataset as DataFrame
+if datasets:
+    df = client.get_dataset_parquet(datasets[0]['id'])
+    print(df.head())
+```
+
+## API Documentation
+
+Full interactive API documentation is available at:
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc**: `http://localhost:8000/redoc`
+
+## Architecture
+
+```
+┌─────────────────┐
+│   FastAPI App   │
+│   (main.py)     │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+┌───▼───┐ ┌──▼───────┐
+│  API  │ │  Celery  │
+│Routes │ │  Tasks   │
+└───┬───┘ └──┬───────┘
+    │        │
+┌───▼────────▼───┐
+│   Services     │
+│ (Business      │
+│  Logic)        │
+└───┬────────┬───┘
+    │        │
+┌───▼───┐ ┌──▼──────────┐
+│  DB   │ │ Data        │
+│Models │ │ Collectors  │
+└───────┘ └──┬──────────┘
+             │
+    ┌────────┼────────┐
+    │        │        │
+┌───▼───┐ ┌──▼───┐ ┌──▼───┐
+│dados  │ │Portal│ │ IBGE │
+│.gov.br│ │Trans.│ │      │
+└───────┘ └──────┘ └──────┘
+```
+
+## Project Structure
+
+```
+datasharing/
+├── app/
+│   ├── api/              # API routes
+│   │   ├── auth.py       # Authentication endpoints
+│   │   ├── datasets.py   # Dataset endpoints
+│   │   └── api_keys.py   # API key management
+│   ├── collectors/       # Data source collectors
+│   │   ├── base.py
+│   │   ├── dados_gov_br.py
+│   │   ├── portal_transparencia.py
+│   │   └── ibge.py
+│   ├── models/           # Database models
+│   ├── schemas/          # Pydantic schemas
+│   ├── services/         # Business logic
+│   └── utils/            # Utilities
+│       ├── security.py
+│       └── data_transform.py
+├── alembic/              # Database migrations
+├── scripts/              # Utility scripts
+├── main.py               # FastAPI application
+├── celery_app.py         # Celery configuration
+├── config.py             # Configuration
+├── requirements.txt      # Dependencies
+├── Dockerfile            # Docker image
+└── docker-compose.yml    # Docker services
+```
+
+## Configuration
+
+Key environment variables (see `.env.example`):
+
+```bash
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/datasharing
+
+# Redis
+REDIS_URL=redis://localhost:6379/0
+
+# Security
+SECRET_KEY=your-secret-key-here
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Rate Limiting
+RATE_LIMIT_PER_MINUTE=60
+RATE_LIMIT_PER_HOUR=1000
+
+# Data Sources
+DADOS_GOV_BR_BASE_URL=https://dados.gov.br
+PORTAL_TRANSPARENCIA_BASE_URL=https://api.portaldatransparencia.gov.br/api-de-dados
+IBGE_API_BASE_URL=https://servicodados.ibge.gov.br/api/v3
+```
+
+## Development
+
+### Running Tests
+
+```bash
+pytest
+```
+
+### Code Formatting
+
+```bash
+black .
+flake8 .
+```
+
+### Database Migrations
+
+```bash
+# Create new migration
+alembic revision --autogenerate -m "Description"
+
+# Apply migrations
+alembic upgrade head
+
+# Rollback
+alembic downgrade -1
+```
+
+## Deployment
+
+### Production Considerations
+
+1. **Security**:
+   - Change `SECRET_KEY` to a strong random value
+   - Set `DEBUG=False`
+   - Use HTTPS with SSL certificates
+   - Configure CORS properly in `main.py`
+
+2. **Database**:
+   - Use managed PostgreSQL (AWS RDS, Google Cloud SQL, etc.)
+   - Enable connection pooling
+   - Set up automated backups
+
+3. **Scaling**:
+   - Use multiple Celery workers
+   - Add Redis cluster for high availability
+   - Use load balancer for API instances
+
+4. **Monitoring**:
+   - Set up logging aggregation (ELK, Datadog, etc.)
+   - Monitor API performance and errors
+   - Track quota usage per user
+
+## License
+
+MIT License - see LICENSE file
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## Support
+
+For issues and questions:
+- Create an issue on GitHub
+- Email: support@example.com
+
+## Acknowledgments
+
+Built with data from:
+- Portal Brasileiro de Dados Abertos (dados.gov.br)
+- Portal da Transparência do Governo Federal
+- Instituto Brasileiro de Geografia e Estatística (IBGE)
+
+---
+
+**Original data sharing guidelines by Jeff Leek** - see [README_ORIGINAL.md](README_ORIGINAL.md)
