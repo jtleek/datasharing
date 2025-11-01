@@ -1,0 +1,21 @@
+[project]
+name = "rms-optimization-framework"
+version = "0.1.0"
+description = "Modular framework for reconfigurable manufacturing systems optimisation"
+authors = [{name = "Research Automation"}]
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "numpy",
+    "pydantic",
+    "PyYAML",
+    "matplotlib",
+    "scipy",
+    "joblib",
+]
+
+[project.optional-dependencies]
+visualization = ["seaborn"]
+
+[tool.black]
+line-length = 88

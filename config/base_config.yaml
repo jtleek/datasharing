@@ -1,0 +1,19 @@
+data:
+  sources: []
+algorithm:
+  name: fcfs
+optimisation:
+  objectives:
+    - makespan
+    - energy
+  weights:
+    makespan: 0.5
+    energy: 0.5
+simulation:
+  repetitions: 10
+validation:
+  confidence_level: 0.95
+hardware:
+  use_gpu: false
+logging:
+  experiment_name: rms-baseline
