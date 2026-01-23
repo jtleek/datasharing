@@ -1,0 +1,855 @@
+# CloudPeople - Complete Technical Specification
+
+## Tech Stack
+
+### Frontend
+- **Next.js 14+** (App Router) - SSR, API routes, file-based routing
+- **shadcn/ui** - Modern, accessible components (inspired by auction houses like Sotheby's clean interfaces)
+- **Tailwind CSS** - Utility-first styling
+- **React Hook Form + Zod** - Form validation
+- **TanStack Query** - Data fetching and caching
+- **Socket.io Client** - Real-time auction updates
+- **Framer Motion** - Smooth animations (dating app feel)
+
+### Backend
+- **Next.js API Routes** - Serverless functions
+- **Prisma ORM** - Type-safe database access
+- **PostgreSQL** - Primary database (AWS RDS)
+- **Socket.io** - WebSocket server for real-time bidding
+- **NextAuth.js** - Authentication with role-based access
+- **Stripe** - Payment processing
+- **AWS S3** - File storage (profiles, portfolios)
+- **Redis** (AWS ElastiCache) - Session storage, auction state caching
+
+### Infrastructure (AWS)
+- **Vercel** - Frontend hosting (seamless Next.js deployment)
+- **AWS RDS** - PostgreSQL database
+- **AWS S3** - File storage
+- **AWS ElastiCache** - Redis for sessions/caching
+- **AWS SES** - Transactional emails
+- **AWS CloudWatch** - Logging and monitoring
+
+---
+
+## Database Schema
+
+```prisma
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CANDIDATE
+  EMPLOYER
+  ADMIN
+}
+
+enum CandidateStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
+enum EmployerVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  INTERVIEW_SCHEDULED
+  AUCTION_APPROVED
+}
+
+enum AuctionStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+  CLOSED
+  CANCELLED
+}
+
+enum OutcomeStatus {
+  PENDING_ACCEPTANCE
+  ACCEPTED
+  DECLINED
+  CONTRACT_SIGNED
+  HIRED
+  FAILED_TO_CLOSE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  role          UserRole
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLogin     DateTime?
+  
+  candidate     Candidate?
+  employer      Employer?
+  
+  sessions      Session[]
+  auditLogs     AuditLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Candidate {
+  id                String           @id @default(cuid())
+  userId            String           @unique
+  status            CandidateStatus  @default(DRAFT)
+  
+  // Profile basics
+  firstName         String
+  lastName          String
+  headline          String?
+  bio               String?
+  profileImageUrl   String?
+  
+  // Professional details
+  currentTitle      String?
+  yearsExperience   Int?
+  skills            String[]         // Array of skill tags
+  domains           String[]         // Industry domains
+  seniority         String?          // Junior, Mid, Senior, Lead, Principal, etc.
+  
+  // Location & work
+  location          String?
+  remotePreference  String?          // Remote, Hybrid, Onsite, Flexible
+  timezone          String?
+  workAuthorization String[]         // US, UK, EU, etc.
+  
+  // Salary & availability
+  minSalary         Decimal          // Auction floor
+  currency          String           @default("USD")
+  availableFrom     DateTime?
+  noticePeriod      Int?             // Days
+  
+  // Visibility controls
+  isSearchable      Boolean          @default(true)
+  isPublic          Boolean          @default(false)
+  
+  // Attachments
+  portfolioUrl      String?
+  githubUrl         String?
+  linkedinUrl       String?
+  resumeUrl         String?
+  certifications    String[]
+  
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  auctionSlots      AuctionSlot[]
+  receivedRequests  Request[]        @relation("CandidateRequests")
+  auctions          Auction[]
+  matches           Match[]
+}
+
+model Employer {
+  id                    String                      @id @default(cuid())
+  userId                String                      @unique
+  verificationStatus    EmployerVerificationStatus  @default(PENDING)
+  
+  // Company details
+  companyName           String
+  companyLogo           String?
+  companyWebsite        String?
+  companySize           String?                     // 1-10, 11-50, 51-200, etc.
+  industry              String?
+  headquarters          String?
+  
+  // Verification docs
+  verificationDocs      String[]
+  verifiedAt            DateTime?
+  verifiedBy            String?                     // Admin user ID
+  
+  // Billing
+  stripeCustomerId      String?
+  depositAmount         Decimal?
+  
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+  
+  user                  User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  seats                 EmployerSeat[]
+  jobOpportunities      JobOpportunity[]
+  sentRequests          Request[]                   @relation("EmployerRequests")
+  auctions              AuctionParticipant[]
+  savedSearches         SavedSearch[]
+}
+
+model EmployerSeat {
+  id          String   @id @default(cuid())
+  employerId  String
+  email       String
+  firstName   String
+  lastName    String
+  role        String?  // Recruiter, Hiring Manager, etc.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  employer    Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  
+  @@unique([employerId, email])
+}
+
+model JobOpportunity {
+  id                String   @id @default(cuid())
+  employerId        String
+  title             String
+  description       String
+  location          String?
+  remoteOption      String?
+  salaryRangeMin    Decimal?
+  salaryRangeMax    Decimal?
+  requiredSkills    String[]
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  employer          Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  
+  requests          Request[]
+  auctions          Auction[]
+}
+
+model Match {
+  id              String   @id @default(cuid())
+  candidateId     String
+  jobOpportunityId String?
+  fitScore        Float?   // 0-100 computed match score
+  computedAt      DateTime @default(now())
+  
+  candidate       Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+model SavedSearch {
+  id          String   @id @default(cuid())
+  employerId  String
+  name        String
+  filters     Json     // Stored filter criteria
+  createdAt   DateTime @default(now())
+  
+  employer    Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+}
+
+model Request {
+  id                String        @id @default(cuid())
+  employerId        String
+  candidateId       String
+  jobOpportunityId  String?
+  status            RequestStatus @default(PENDING)
+  
+  message           String?
+  employerMessage   String?
+  candidateResponse String?
+  
+  requestedAt       DateTime      @default(now())
+  respondedAt       DateTime?
+  expiresAt         DateTime?
+  
+  employer          Employer      @relation("EmployerRequests", fields: [employerId], references: [id], onDelete: Cascade)
+  candidate         Candidate     @relation("CandidateRequests", fields: [candidateId], references: [id], onDelete: Cascade)
+  jobOpportunity    JobOpportunity? @relation(fields: [jobOpportunityId], references: [id], onDelete: SetNull)
+  
+  conversations     Conversation[]
+  interviews        InterviewEvent[]
+}
+
+model Conversation {
+  id          String    @id @default(cuid())
+  requestId   String
+  createdAt   DateTime  @default(now())
+  
+  request     Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  messages    Message[]
+}
+
+model Message {
+  id              String       @id @default(cuid())
+  conversationId  String
+  senderId        String       // User ID
+  content         String
+  attachments     String[]
+  readAt          DateTime?
+  createdAt       DateTime     @default(now())
+  
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model InterviewEvent {
+  id          String    @id @default(cuid())
+  requestId   String
+  scheduledAt DateTime
+  duration    Int       // Minutes
+  meetingUrl  String?
+  notes       String?
+  status      String    @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  createdAt   DateTime  @default(now())
+  
+  request     Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
+
+model AuctionSlot {
+  id          String    @id @default(cuid())
+  candidateId String
+  startTime   DateTime
+  endTime     DateTime
+  isAvailable Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  auctions    Auction[]
+}
+
+model Auction {
+  id                String        @id @default(cuid())
+  candidateId       String
+  jobOpportunityId  String?
+  auctionSlotId     String?
+  status            AuctionStatus @default(SCHEDULED)
+  
+  // Auction rules
+  floorSalary       Decimal
+  currency          String        @default("USD")
+  minIncrement      Decimal       @default(1000)
+  
+  // Timing
+  scheduledStart    DateTime
+  scheduledEnd      DateTime
+  actualStart       DateTime?
+  actualEnd         DateTime?
+  
+  // Results
+  winningBid        Decimal?
+  winnerId          String?
+  
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  candidate         Candidate     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  jobOpportunity    JobOpportunity? @relation(fields: [jobOpportunityId], references: [id], onDelete: SetNull)
+  auctionSlot       AuctionSlot?  @relation(fields: [auctionSlotId], references: [id], onDelete: SetNull)
+  
+  participants      AuctionParticipant[]
+  bids              Bid[]
+  outcome           Outcome?
+}
+
+model AuctionParticipant {
+  id              String   @id @default(cuid())
+  auctionId       String
+  employerId      String
+  depositPaid     Boolean  @default(false)
+  depositAmount   Decimal?
+  joinedAt        DateTime @default(now())
+  
+  auction         Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  employer        Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  
+  @@unique([auctionId, employerId])
+}
+
+model Bid {
+  id          String   @id @default(cuid())
+  auctionId   String
+  bidderId    String   // Employer ID
+  amount      Decimal
+  isWinning   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  auction     Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  
+  @@index([auctionId, createdAt])
+}
+
+model Outcome {
+  id              String         @id @default(cuid())
+  auctionId       String         @unique
+  status          OutcomeStatus  @default(PENDING_ACCEPTANCE)
+  finalSalary     Decimal
+  winnerId        String         // Employer ID
+  
+  acceptedAt      DateTime?
+  hiredAt         DateTime?
+  startDate       DateTime?
+  
+  failureReason   String?
+  failureDetails  String?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  auction         Auction        @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  payment         Payment?
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  outcomeId       String   @unique
+  
+  // Platform fee
+  platformFee     Decimal
+  candidateShare  Decimal?
+  employerCharge  Decimal
+  
+  stripePaymentId String?
+  stripePayout    String?
+  
+  paidAt          DateTime?
+  payoutAt        DateTime?
+  
+  createdAt       DateTime @default(now())
+  
+  outcome         Outcome  @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String   // BID_PLACED, AUCTION_STARTED, PROFILE_UPDATED, etc.
+  entityType  String   // Auction, Bid, User, etc.
+  entityId    String
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+}
+
+model ModerationFlag {
+  id          String   @id @default(cuid())
+  entityType  String   // User, Candidate, Employer, Message
+  entityId    String
+  reason      String
+  details     String?
+  reportedBy  String?  // User ID
+  status      String   @default("PENDING") // PENDING, REVIEWED, ACTIONED, DISMISSED
+  reviewedBy  String?  // Admin user ID
+  reviewedAt  DateTime?
+  createdAt   DateTime @default(now())
+  
+  @@index([status, createdAt])
+}
+```
+
+---
+
+## API Endpoints (Next.js API Routes)
+
+### Authentication
+- `POST /api/auth/register` - Create account (candidate/employer)
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+- `POST /api/auth/verify-email` - Email verification
+- `POST /api/auth/reset-password` - Password reset
+
+### Candidates
+- `GET /api/candidates/me` - Get own profile
+- `PUT /api/candidates/me` - Update profile
+- `POST /api/candidates/me/upload` - Upload files (resume, portfolio)
+- `GET /api/candidates/search` - Search candidates (employer only)
+- `GET /api/candidates/:id` - View candidate profile (employer only, if visible)
+- `POST /api/candidates/auction-slots` - Create auction slot
+- `DELETE /api/candidates/auction-slots/:id` - Remove slot
+
+### Employers
+- `GET /api/employers/me` - Get employer profile
+- `PUT /api/employers/me` - Update employer profile
+- `POST /api/employers/verify` - Submit verification docs
+- `GET /api/employers/seats` - List seats
+- `POST /api/employers/seats` - Add seat
+- `DELETE /api/employers/seats/:id` - Remove seat
+
+### Job Opportunities
+- `GET /api/jobs` - List jobs (employer's own)
+- `POST /api/jobs` - Create job
+- `PUT /api/jobs/:id` - Update job
+- `DELETE /api/jobs/:id` - Delete job
+
+### Requests
+- `POST /api/requests` - Send request (employer → candidate)
+- `GET /api/requests` - List requests (filtered by role)
+- `GET /api/requests/:id` - Get request details
+- `PUT /api/requests/:id/respond` - Candidate responds
+- `PUT /api/requests/:id/cancel` - Cancel request
+
+### Conversations
+- `GET /api/conversations/:requestId` - Get conversation
+- `POST /api/conversations/:requestId/messages` - Send message
+- `PUT /api/conversations/messages/:id/read` - Mark as read
+
+### Interviews
+- `POST /api/interviews` - Schedule interview
+- `GET /api/interviews/:id` - Get interview details
+- `PUT /api/interviews/:id` - Update/cancel interview
+
+### Auctions
+- `POST /api/auctions` - Create auction (candidate)
+- `GET /api/auctions` - List auctions (filtered by role)
+- `GET /api/auctions/:id` - Get auction details
+- `POST /api/auctions/:id/join` - Employer joins auction
+- `POST /api/auctions/:id/bids` - Place bid (employer)
+- `GET /api/auctions/:id/bids` - Get bid history
+- `PUT /api/auctions/:id/cancel` - Cancel auction
+
+### Outcomes
+- `GET /api/outcomes/:auctionId` - Get outcome
+- `PUT /api/outcomes/:auctionId/accept` - Accept offer (candidate)
+- `PUT /api/outcomes/:auctionId/decline` - Decline offer
+- `PUT /api/outcomes/:auctionId/close` - Mark as hired/failed
+
+### Payments
+- `POST /api/payments/setup-intent` - Create Stripe setup intent
+- `POST /api/payments/charge` - Process payment
+- `GET /api/payments/:outcomeId` - Get payment status
+
+### Admin
+- `GET /api/admin/verification-queue` - Pending verifications
+- `PUT /api/admin/verify-employer/:id` - Approve/reject employer
+- `GET /api/admin/moderation-flags` - Moderation queue
+- `PUT /api/admin/moderation-flags/:id` - Resolve flag
+- `GET /api/admin/analytics` - Platform analytics
+
+### Search
+- `POST /api/search/candidates` - Advanced candidate search
+- `POST /api/search/save` - Save search
+- `GET /api/search/saved` - Get saved searches
+
+---
+
+## Page Structure (Next.js App Router)
+
+```
+app/
+├── (auth)/
+│   ├── login/
+│   │   └── page.tsx
+│   ├── register/
+│   │   └── page.tsx
+│   └── verify-email/
+│       └── page.tsx
+│
+├── (candidate)/
+│   ├── dashboard/
+│   │   └── page.tsx              # Auction overview, requests, upcoming
+│   ├── profile/
+│   │   ├── page.tsx              # View/edit profile
+│   │   └── edit/
+│   │       └── page.tsx
+│   ├── requests/
+│   │   ├── page.tsx              # Inbox
+│   │   └── [id]/
+│   │       └── page.tsx          # Request detail + chat
+│   ├── auctions/
+│   │   ├── page.tsx              # My auctions list
+│   │   ├── create/
+│   │   │   └── page.tsx
+│   │   └── [id]/
+│   │       └── page.tsx          # Auction detail + live view
+│   └── outcomes/
+│       ├── page.tsx
+│       └── [id]/
+│           └── page.tsx          # Post-auction workflow
+│
+├── (employer)/
+│   ├── dashboard/
+│   │   └── page.tsx              # Search, active requests, auctions
+│   ├── search/
+│   │   └── page.tsx              # Candidate search with filters
+│   ├── candidates/
+│   │   └── [id]/
+│   │       └── page.tsx          # Candidate profile view
+│   ├── requests/
+│   │   ├── page.tsx              # Sent requests
+│   │   └── [id]/
+│   │       └── page.tsx          # Request + conversation
+│   ├── auctions/
+│   │   ├── page.tsx              # Auctions joined/won
+│   │   └── [id]/
+│   │       └── page.tsx          # Live auction bidding UI
+│   ├── jobs/
+│   │   ├── page.tsx
+│   │   ├── create/
+│   │   │   └── page.tsx
+│   │   └── [id]/
+│   │       └── page.tsx
+│   └── settings/
+│       ├── page.tsx              # Company profile
+│       ├── verification/
+│       │   └── page.tsx
+│       └── billing/
+│           └── page.tsx
+│
+├── (admin)/
+│   ├── dashboard/
+│   │   └── page.tsx
+│   ├── verification/
+│   │   └── page.tsx              # Employer verification queue
+│   ├── moderation/
+│   │   └── page.tsx
+│   ├── auctions/
+│   │   └── page.tsx              # All auctions monitor
+│   └── analytics/
+│       └── page.tsx
+│
+└── api/
+    └── [...all API routes above]
+```
+
+---
+
+## Key UI Components (shadcn/ui based)
+
+### Auction House Inspiration (Sotheby's/Christie's)
+- Clean, minimal interface with focus on the item (candidate)
+- High-quality imagery and presentation
+- Live bidding counter with smooth animations
+- Bid history sidebar with elegant typography
+- Countdown timer with urgency indicators
+- "Place Bid" button with confirmation modal
+- Winner announcement with celebration animation
+
+### Dating App Inspiration (Tinder/Hinge)
+- Swipeable candidate cards (for employer search)
+- Profile photo carousel
+- "Like/Pass" action buttons
+- Match celebration animation
+- Chat interface with typing indicators
+- Scheduled date/time picker for interviews
+- Profile completion percentage indicator
+- Mutual interest notifications
+
+### Component List
+1. **CandidateCard** - Tinder-style card with swipe
+2. **AuctionTimer** - Countdown with visual urgency
+3. **BiddingPanel** - Live bid interface
+4. **BidHistory** - Elegant list with animations
+5. **ChatInterface** - Messaging UI
+6. **ProfileGallery** - Image carousel
+7. **RequestInbox** - Message-style inbox
+8. **InterviewScheduler** - Calendar picker
+9. **VerificationBadge** - Trust indicator
+10. **MatchAnimation** - Celebration overlay
+11. **SearchFilters** - Advanced filter panel
+12. **AuctionSlotPicker** - Time slot selector
+
+---
+
+## Real-Time Architecture (Socket.io)
+
+### WebSocket Events
+
+**Client → Server:**
+- `auction:join` - Join auction room
+- `auction:leave` - Leave room
+- `auction:bid` - Place bid
+- `message:send` - Send chat message
+- `message:typing` - Typing indicator
+
+**Server → Client:**
+- `auction:started` - Auction went live
+- `auction:bid_placed` - New bid (with bidder info)
+- `auction:winning` - You're currently winning
+- `auction:outbid` - You've been outbid
+- `auction:ending_soon` - 5 min warning
+- `auction:ended` - Auction finished
+- `message:received` - New message
+- `message:typing` - Someone typing
+- `request:new` - New request received
+
+### Redis for Auction State
+```typescript
+// Auction state cached in Redis
+{
+  auctionId: string,
+  currentBid: number,
+  currentWinner: string,
+  bidCount: number,
+  participants: string[],
+  endsAt: timestamp,
+  status: 'live' | 'ended'
+}
+```
+
+---
+
+## Security & Compliance
+
+### Authentication
+- Bcrypt password hashing
+- JWT tokens with refresh mechanism
+- Role-based middleware on all routes
+- Email verification required
+
+### Auction Integrity
+- Database transactions for bids
+- Optimistic locking on auction records
+- Idempotency keys for bid requests
+- Rate limiting (max 1 bid per 5 seconds per user)
+- Audit logging of all bids
+
+### Privacy (GDPR)
+- Consent tracking for data processing
+- Data export endpoint (`/api/me/export`)
+- Data deletion endpoint (`/api/me/delete`)
+- PII encryption at rest
+- Minimal data exposure in search results
+
+### Fraud Prevention
+- Employer verification required for bidding
+- Deposit system for auction participation
+- Ban/suspend mechanisms
+- IP and device fingerprinting
+- Anomaly detection (suspicious bid patterns)
+
+---
+
+## Development Phases
+
+### Phase 1: Auth & Profiles (Week 1-2)
+- User registration/login
+- Candidate profile creation
+- Employer profile + verification flow
+- Basic role routing
+
+### Phase 2: Search & Requests (Week 3-4)
+- Candidate search with filters
+- Request sending/receiving
+- Conversation/messaging
+- Interview scheduling
+
+### Phase 3: Auctions - Basic (Week 5-6)
+- Auction scheduling
+- Auction participation
+- Manual bidding (no real-time yet)
+- Outcome tracking
+
+### Phase 4: Real-Time Bidding (Week 7-8)
+- Socket.io integration
+- Live auction UI
+- Redis caching
+- Bid validation & locking
+
+### Phase 5: Payments & Admin (Week 9-10)
+- Stripe integration
+- Payment processing
+- Admin dashboard
+- Moderation tools
+
+### Phase 6: Polish & Deploy (Week 11-12)
+- UI/UX refinement
+- Performance optimization
+- AWS deployment
+- Monitoring & logging
+
+---
+
+## Deployment (AWS)
+
+### Services Required
+1. **Vercel** - Host Next.js app
+2. **AWS RDS (PostgreSQL)** - Primary database
+3. **AWS ElastiCache (Redis)** - Session/auction cache
+4. **AWS S3** - File uploads
+5. **AWS SES** - Email sending
+6. **AWS CloudWatch** - Logs & monitoring
+7. **Stripe** - Payments
+
+### Environment Variables
+```bash
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_S3_BUCKET=...
+STRIPE_SECRET_KEY=...
+STRIPE_WEBHOOK_SECRET=...
+NEXTAUTH_SECRET=...
+NEXTAUTH_URL=...
+SOCKET_IO_URL=...
+```
+
+---
+
+## Getting Started with Claude Code
+
+### Prompt for Claude Code:
+
+```
+Build CloudPeople using this specification: [paste this entire document]
+
+Start with Phase 1: Authentication and Profiles.
+
+Tech stack:
+- Next.js 14 (App Router)
+- TypeScript
+- Prisma + PostgreSQL
+- shadcn/ui components
+- Tailwind CSS
+- NextAuth.js
+
+Create the following in order:
+1. Initialize Next.js project with TypeScript
+2. Set up Prisma schema (use the provided schema)
+3. Create database migration
+4. Set up NextAuth.js with email/password
+5. Create registration flow for candidates and employers
+6. Build candidate profile creation wizard
+7. Build employer profile + verification flow
+8. Create role-based dashboard routing
+
+For UI: Use shadcn/ui components with a design inspired by:
+- Sotheby's auction house (clean, minimal, elegant)
+- Tinder/Hinge (swipeable cards, match interactions)
+
+After Phase 1 is complete and tested, I'll ask you to proceed with Phase 2.
+```
+
+---
+
+## Notes for Iteration
+
+- Start with MVP features, polish later
+- Use feature flags for gradual rollout
+- Implement comprehensive error handling
+- Add loading states and optimistic UI updates
+- Write tests for auction logic (critical path)
+- Monitor performance with Vercel Analytics
+- Set up error tracking (Sentry)
+- Create admin tools early for debugging
+
+---
+
+This specification is comprehensive and ready for Claude Code to execute. The phased approach ensures you can test and iterate at each stage before moving forward.
